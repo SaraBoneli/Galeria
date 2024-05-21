@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"><!-- define um shape(forma) -->
+    <solid android:color="#FFFFFF"/><!-- define a cor branca -->
+    <corners android:radius="5dp"/><!-- define cantos arredondados -->
+    <padding android:bottom="5dp" android:left="5dp" android:right="5dp" android:top="5dp"/><!-- define a margem interna -->
+    <stroke android:width="2dp"/><!-- define linha de contorno -->
+</shape>
