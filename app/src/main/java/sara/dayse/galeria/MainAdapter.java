@@ -28,7 +28,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         ImageView imPhoto = holder.itemView.findViewById(R.id.imItem);
         int w = (int)
                 mainActivity.getResources().getDimension(R.dimen.itemWidth);
@@ -36,8 +36,8 @@ public class MainAdapter extends RecyclerView.Adapter {
                 mainActivity.getResources().getDimension(R.dimen.itemHeight);
         //obtém as dimensões que a imagem vai ter na lista
 
-        BitmapDrawable Utils;
-        Bitmap bitmap = Utils.getBitmap(photos.get(position), w, h);
+
+        Bitmap bitmap = Util.getBitmap(photos.get(position), w, h);
         //carrega a imagem em um Bitmap ao mesmo tempo em que a foto
         // é escalada para casar com os
         //tamanhos definidos para o ImageView
