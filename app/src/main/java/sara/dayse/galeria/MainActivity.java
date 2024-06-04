@@ -4,13 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -29,6 +34,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     static int RESULT_TAKE_PICTURE = 1;
+    static int RESULT_REQUEST_PERMISSION = 2;
 
     String currentPhotoPath;
 
@@ -61,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.tbMain);//obtém o elemento tbMain
         setSupportActionBar(toolbar);//indica que tbMain (ToolBar) deve ser considerado como a ActionBar
+
+        List<String> permissions = new ArrayList<>();
+        permissions.add(Manifest.permission.CAMERA);
+        checkForPermissions(permissions);
 
 
     }
@@ -125,5 +135,63 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra("photo_path", photoPath);//caminho da foto sendo passado para PhotoActivity via Intent
         startActivity(i);
     }
+    private void checkForPermissions(List<String> permissions) {
+        //aceita uma lista de permissões como entrada
+        List<String> permissionsNotGranted = new ArrayList<>();
+        for(String permission : permissions) {//cada permissão é verificada
+            if( !hasPermission(permission)) {//caso o usuário não tenha ainda confirmado uma permissão
+                permissionsNotGranted.add(permission);//permissão posta em uma lista de permissões não confirmadas ainda
+            }
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(permissionsNotGranted.size() > 0) {
+                requestPermissions(permissionsNotGranted.toArray(new String[permissionsNotGranted.size()]),RESULT_REQUEST_PERMISSION);
+                //permissões não concedidas são requisitadas ao usuário
+            }
+        }
 
+    }
+
+    private boolean hasPermission(String permission) {
+        //verifica se uma determinada permissão já foi concedida ou não.
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return ActivityCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_GRANTED;
+        }
+        return false;
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull
+    String[] permissions, @NonNull int[] grantResults){
+        //método chamado após o usuário conceder ou não as permissões requisitadas
+        super.onRequestPermissionsResult(requestCode, permissions,grantResults);
+        final List<String> permissionsRejected = new ArrayList<>();
+        if(requestCode == RESULT_REQUEST_PERMISSION) {
+            for(String permission : permissions) {//Para cada permissão é verificado se a mesma foi concedida ou não
+                if(!hasPermission(permission)) {
+                    permissionsRejected.add(permission);
+
+                }
+            }
+        }
+        if (permissionsRejected.size() > 0) {
+            //Caso ainda tenha alguma permissão que não foi concedida e ela é necessária para o funcionamento correto da app
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))){
+                    new AlertDialog.Builder(MainActivity.this).setMessage
+                            ("Para usar essa app é preciso conceder essas permissões").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                //é exibida uma mensagem ao usuário informando que a permissão é realmente necessária
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), RESULT_REQUEST_PERMISSION);
+                        }
+                    }).create().show();////é exibida uma mensagem ao usuário informando que a permissão é realmente necessária
+                }
+            }
+        }
+
+    }
 }
+
+
