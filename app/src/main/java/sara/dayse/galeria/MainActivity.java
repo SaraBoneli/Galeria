@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.Manifest;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
         checkForPermissions(permissions);
 
 
+
+
+
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -80,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main_activity_tb,menu);
         return true;
     }
-    public boolean onOptionsItenmSelected(@NonNull MenuItem item) {
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.opCamera) {//caso icone de câmera for clicado
             dispatchTakePictureIntent();//executa código que dispara a câmera do celular
             return true;

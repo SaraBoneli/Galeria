@@ -3,6 +3,7 @@ package sara.dayse.galeria;
 import android.graphics.Bitmap;
 import android.graphics.NinePatch;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,7 +25,11 @@ public class MainAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        LayoutInflater inflater = LayoutInflater.from(mainActivity);//obtém inflador de layouts
+        View v = inflater.inflate(R.layout.list_item,parent,false);//cria elementos de interface referentes a um item
+        // e guarda dentro de um objeto do tipo View
+        return new MyViewHolder(v);//guarda objeto do tipo View dentro de um objeto do tipo MyViewHolder
+        // ,que é retornado pela função
     }
 
     @Override
@@ -53,6 +58,6 @@ public class MainAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return photos.size();
     }
 }

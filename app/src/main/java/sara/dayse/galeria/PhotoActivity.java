@@ -43,17 +43,17 @@ public class PhotoActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();// cria "inflador de menu"
-        inflater.inflate(R.menu.main_activity_tb,menu);
+        inflater.inflate(R.menu.photo_activity_tb,menu);
         return true;
     }
-    public boolean onOptionItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.opShare://caso icone de compartilhamento for clicado
-                sharePhoto();//executa código que compartilha a foto
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.opShare) {//caso icone de compartilhamento for clicado
+            sharePhoto();//executa código que compartilha a foto
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void sharePhoto() {
